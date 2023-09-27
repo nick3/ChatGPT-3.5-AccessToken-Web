@@ -3,7 +3,7 @@
 import os
 from os import path
 from certifi import where
-
+import json
 import requests
 
 from pandora.openai.auth import Auth0
@@ -48,10 +48,10 @@ def run():
     current_path = os.getcwd()  # 获取当前工作目录路径
     parent_path = os.path.dirname(current_path)  # 获取父目录路径
     current_dir = path.dirname(path.abspath(__file__))
-    credentials_file = '/config/user.txt'
+    credentials_file = '/config/users.txt'
     # credentials_file = path.join(current_dir, 'user.txt')
 
-    tokens_file = '/config/token.txt'
+    tokens_file = '/config/tokens.txt'
     # tokens_file = path.join(current_dir, 'token.txt')
 
     with open(credentials_file, 'r', encoding='utf-8') as f:
@@ -72,6 +72,7 @@ def run():
         print(password, refresh_token)
 
         token_info = {
+            'username': username,
             'token': 'None',
             'share_token': 'None',
         }
@@ -104,9 +105,15 @@ def run():
         #     token_info['share_token'] = err_str
         #     continue
 
+    # with open(tokens_file, 'w', encoding='utf-8') as f:
+    #     for token_info in token_keys:
+    #         f.write('{}\n'.format(token_info['token']))
+
+
     with open(tokens_file, 'w', encoding='utf-8') as f:
-        for token_info in token_keys:
-            f.write('{}\n'.format(token_info['token']))
+        data = {token_info['username']: token_info['token'] for token_info in token_keys}
+        json_data = json.dumps(data)
+        f.write(json_data)
 
 
 if __name__ == '__main__':
