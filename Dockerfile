@@ -43,6 +43,6 @@ EXPOSE 8008
 # 环境变量
 ENV CODE=YourCode
 
-CMD cron && sh myscript.sh && cd /app/ChatGPT-3.5-AccessToken-Web && yarn start'
+CMD sh -c 'cron && sh myscript.sh && cd /app/ChatGPT-3.5-AccessToken-Web && yarn start'
 
 
