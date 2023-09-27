@@ -41,8 +41,8 @@ EXPOSE 3000
 EXPOSE 8008
 
 # 环境变量
-ENV username=Youruser password=Yourpassowrd CODE=YourCode
+ENV CODE=YourCode
 
-CMD sh -c 'echo "${username},${password}" > /app/ChatGPT-3.5-AccessToken-Web/user.txt && cron && sh myscript.sh && cd /app/ChatGPT-3.5-AccessToken-Web && yarn start'
+CMD cron && sh myscript.sh && cd /app/ChatGPT-3.5-AccessToken-Web && yarn start'
 
 
