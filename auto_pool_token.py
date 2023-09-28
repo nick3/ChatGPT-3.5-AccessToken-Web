@@ -63,32 +63,52 @@ def run():
     token_keys = []
     for credential in credentials:
         progress = '{}/{}'.format(credentials.index(credential) + 1, len(credentials))
-        if not credential or len(credential) != 3:
-            continue
-
         count += 1
-        username, password, refresh_token = credential[0].strip(), credential[1].strip(), credential[2].strip()
-        print('Login begin: {}, {}'.format(username, progress))
-        print(password, refresh_token)
-
-        token_info = {
-            'username': username,
-            'token': 'None',
-            'share_token': 'None',
-        }
-        token_keys.append(token_info)
-
-        try:
-            if refresh_token:
-                token_info['token'] = get_access_token_by_refresh_token(refresh_token)
-            else:
-                token_info['token'] = Auth0(username, password, proxy).auth()
-            print('Login success: {}, {}'.format(username, progress))
-        except Exception as e:
-            err_str = str(e).replace('\n', '').replace('\r', '').strip()
-            print('Login failed: {}, {}'.format(username, err_str))
-            token_info['token'] = err_str
+        
+        if not credential:
             continue
+        
+        if len(credential) == 3:
+            username, refresh_token = credential[0].strip(), credential[2].strip()
+            print('Login begin: {}, {}'.format(username, progress))
+            print(refresh_token)
+
+            token_info = {
+                'username': username,
+                'token': 'None',
+                'share_token': 'None',
+            }
+            token_keys.append(token_info)
+
+            try:
+                token_info['token'] = get_access_token_by_refresh_token(refresh_token)
+                print('Login success: {}, {}'.format(username, progress))
+            except Exception as e:
+                err_str = str(e).replace('\n', '').replace('\r', '').strip()
+                print('Login failed: {}, {}'.format(username, err_str))
+                token_info['token'] = err_str
+                continue
+                
+        elif len(credential) == 2:
+            username, password = credential[0].strip(), credential[1].strip()
+            print('Login begin: {}, {}'.format(username, progress))
+            print(password)
+
+            token_info = {
+                'username': username,
+                'token': 'None',
+                'share_token': 'None',
+            }
+            token_keys.append(token_info)
+
+            try:
+                token_info['token'] = Auth0(username, password, proxy).auth()
+                print('Login success: {}, {}'.format(username, progress))
+            except Exception as e:
+                err_str = str(e).replace('\n', '').replace('\r', '').strip()
+                print('Login failed: {}, {}'.format(username, err_str))
+                token_info['token'] = err_str
+                continue
 
         # data = {
         #     'unique_name': unique_name,
